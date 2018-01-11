@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SequencesAlignment
 {
-    class Hirschberg
+    public class Hirschberg
     {
         public Hirschberg(SimilarityMatrix similarityMatrix)
         {
