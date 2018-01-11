@@ -34,9 +34,7 @@ namespace SequencesAlignmentTests.Algorithms
                 "TATGC",
                 "AGTACGCA",
                 "--TATGC-"
-
-            }
-            ,
+            },
             new object[]
             {
                 "A G T C\n0 -2 -2 -2 -2\n-2 2 -1 -1 -1\n-2 -1 2 -1 -1\n-2 -1 -1 2 -1\n-2 -1 -1 -1 2",
@@ -44,6 +42,22 @@ namespace SequencesAlignmentTests.Algorithms
                 "G",
                 "AGA",
                 "-G-"
+            },
+            new object[]
+            {
+                "A G T C\n0 0 0 0 0\n0 1 -1 -1 -1\n0 -1 1 -1 -1\n0 -1 -1 1 -1\n0 -1 -1 -1 1",
+                "ATAAGC",
+                "AAAAACG",
+                "ATAAG--C-",
+                "A-AA-AACG"
+            },
+            new object[]
+            {
+                "A G T C\n0 -1 -1 -1 -1\n-1 1 0 0 0\n-1 0 1 0 0\n-1 0 0 1 0\n-1 0 0 0 1",
+                "ATAAGC",
+                "AAAAACG",
+                "ATAAGC-",
+                "AAAAACG"
             }
         };
 
