@@ -5,7 +5,7 @@ using System.IO;
 
 namespace SequencesAlignment
 {
-    class SimilarityMatrix
+    public class SimilarityMatrix
     {
         /// <summary>
         /// Creates new SimilarityMatrix instance
@@ -30,7 +30,7 @@ namespace SequencesAlignment
                 indices = new Dictionary<char, int>();
                 FillIndices(sr);
                 int len = indices.Keys.Count;
-                matrix = new double[len,len];
+                Matrix = new double[len,len];
                 FillMatrix(sr);
             }
         }
@@ -45,7 +45,7 @@ namespace SequencesAlignment
         {
             int index1 = indices[letter1];
             int index2 = indices[letter2];
-            return matrix[index1, index2];
+            return Matrix[index1, index2];
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SequencesAlignment
 
 
         private Dictionary<char, int> indices;
-        private double[,] matrix;
+        public double[,] Matrix { get; set; }
 
         private bool IsUppercaseLetter(string str)
         {
@@ -99,7 +99,7 @@ namespace SequencesAlignment
 
         private void FillMatrix(StringReader sr)
         {
-            int len = matrix.GetLength(0);
+            int len = Matrix.GetLength(0);
             for (int i = 0; i < len; i++)
             {
                 string[] values = sr.ReadLine().Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
@@ -109,7 +109,7 @@ namespace SequencesAlignment
                 }
                 for(int j = 0; j < len; j++)
                 {
-                    matrix[i, j] = double.Parse(values[j], CultureInfo.InvariantCulture);
+                    Matrix[i, j] = double.Parse(values[j], CultureInfo.InvariantCulture);
                 }
             }
         }
