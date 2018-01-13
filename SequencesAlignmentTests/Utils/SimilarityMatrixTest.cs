@@ -58,35 +58,77 @@ namespace SequencesAlignmentTests.Utils
                 new double[,] { { 0, -2, -2, -2, - 2 }, { -2, 2, -1, -1, -1 }, { -2, -1, 2, -1, -1 }, { -2, -1, -1, 2, -1 }, { -2, -1, -1, -1, 2 } }
             }
         };
+        
 
-        private string matrixForTestCheckSequenceCorrectness =
+        private static string matrixForTestsString =
             "A G T C\n0 -2 -2 -2 -2\n-2 2 -1 -1 -1\n-2 -1 2 -1 -1\n-2 -1 -1 2 -1\n-2 -1 -1 -1 2";
+
+        private static SimilarityMatrix matrixForTests = new SimilarityMatrix(matrixForTestsString);
+
+
+        [Test]
+        [TestCaseSource(nameof(_evaluateTestCases))]
+        public void TestEvaluate(SimilarityMatrix matrix, string seq1, string seq2, double expected)
+        {
+            double result = matrix.Evaluate(seq1, seq2);
+            Assert.AreEqual(expected, result);
+        }
+
+        static object[] _evaluateTestCases =
+        {
+            new object[]
+            {
+                matrixForTests,
+                "AGTACGCA",
+                "--TATGC-",
+                1.0
+            },
+            new object[]
+            {
+                matrixForTests,
+                "AGA",
+                "-G-",
+                -2.0
+            },
+            new object[]
+            {
+                matrixForTests,
+                "ATAAG--C-",
+                "A-AA-AACG",
+                -2.0
+            },
+            new object[]
+            {
+                matrixForTests,
+                "ATAAGC-",
+                "AAAAACG",
+                4.0
+            }
+        };
+        
 
         [Test]
         public void TestCheckSequenceCorrectness()
         {            
-            SimilarityMatrix similarityMatrix = new SimilarityMatrix(matrixForTestCheckSequenceCorrectness);
-            similarityMatrix.CheckSequenceCorrectness("AGACGTTGC");
+            matrixForTests.CheckSequenceCorrectness("AGACGTTGC");
         }
 
         [Test]
         public void Test_SHould_Throw_Exception_Unknown_Letter()
         {
-            SimilarityMatrix similarityMatrix = new SimilarityMatrix(matrixForTestCheckSequenceCorrectness);
-            Assert.Throws<KeyNotFoundException>(() => similarityMatrix.CheckSequenceCorrectness("AGAXCGTTGC"));            
+            Assert.Throws<KeyNotFoundException>(() => matrixForTests.CheckSequenceCorrectness("AGAXCGTTGC"));            
         }
 
         [Test]
         public void Test_SHould_Throw_Exception_Lowercase_Letter()
         {
-            SimilarityMatrix similarityMatrix = new SimilarityMatrix(matrixForTestCheckSequenceCorrectness);
-            Assert.Throws<Exception>(() => similarityMatrix.CheckSequenceCorrectness("GCtTc"));
+            Assert.Throws<Exception>(() => matrixForTests.CheckSequenceCorrectness("GCtTc"));
         }
+
         [Test]
         public void Test_Should_Throw_Exception_Not_Letter()
         {
-            SimilarityMatrix similarityMatrix = new SimilarityMatrix(matrixForTestCheckSequenceCorrectness);
-            Assert.Throws<Exception>(() => similarityMatrix.CheckSequenceCorrectness("GCCT3GT"));
+            Assert.Throws<Exception>(() => matrixForTests.CheckSequenceCorrectness("GCCT3GT"));
         }
     }
 }

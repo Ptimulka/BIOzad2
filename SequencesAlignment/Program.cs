@@ -60,10 +60,12 @@ namespace SequencesAlignment
             {
                 Hirschberg h = new Hirschberg(similarityMatrix);
                 var results = h.StartAlgorithm(sequence1, sequence2);
+                double evaluation = similarityMatrix.Evaluate(results.Item1, results.Item2);
                 Console.WriteLine(results.Item1);
                 Console.WriteLine(results.Item2);
+                Console.WriteLine("Evaluation: " + evaluation);
             }
-            
+
         }
     }
 }

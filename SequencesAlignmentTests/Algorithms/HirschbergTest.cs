@@ -1,10 +1,6 @@
 ﻿using NUnit.Framework;
 using SequencesAlignment;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SequencesAlignmentTests.Algorithms
 {
@@ -58,6 +54,15 @@ namespace SequencesAlignmentTests.Algorithms
                 "AAAAACG",
                 "ATAAGC-",
                 "AAAAACG"
+            },
+            new object[]
+            {
+                //"A G T C\n0 0 0 0 0\n0 1 0 0 0\n0 0 1 0 0\n0 0 0 1 0\n0 0 0 0 1",
+                "A G T C\n0 -1 -1 -1 -1\n-1 1 0 0 0\n-1 0 1 0 0\n-1 0 0 1 0\n-1 0 0 0 1",
+                "CTG",
+                "CCCG",
+                "CT-G",
+                "CCCG"
             }
         };
 

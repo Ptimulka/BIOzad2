@@ -65,6 +65,19 @@ namespace SequencesAlignment
             }
         }
 
+        public double Evaluate(string seq1, string seq2)
+        {
+            if(seq1.Length != seq2.Length)
+            {
+                throw new Exception("Sequences must have the same length");
+            }
+            double ret = 0;
+            for(int i = 0; i < seq1.Length; i++)
+            {
+                ret += GetSimilarity(seq1[i], seq2[i]);
+            }
+            return ret;
+        }
 
         private Dictionary<char, int> indices;
         public double[,] Matrix { get; set; }
