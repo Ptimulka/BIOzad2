@@ -8,9 +8,13 @@ namespace SequencesAlignment.Algorithms
 {
     class WithGapPenalty
     {
-        public WithGapPenalty(SimilarityMatrix similarityMatrix)
+        private SimilarityMatrix similarityMatrix;
+        private Func<int, int> penaltyFunc;
+
+        public WithGapPenalty(SimilarityMatrix similarityMatrix, Func<int, int> penaltyFunc )
         {
             this.similarityMatrix = similarityMatrix;
+            this.penaltyFunc = penaltyFunc;
         }
 
         /// <summary>
@@ -47,8 +51,6 @@ namespace SequencesAlignment.Algorithms
             FillTables(A, B, C, S, X, Y);
             return GetAlignments(S, X, Y);
         }
-
-        private SimilarityMatrix similarityMatrix;
 
         class Cell
         {
@@ -209,7 +211,7 @@ namespace SequencesAlignment.Algorithms
 
         private double Penalty(int len)
         {
-            return len + 1;
+            return penaltyFunc(len);
         }
     }
 }
