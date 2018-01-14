@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SequencesAlignment.Algorithms
 {
-    class WithGapPenalty
+    public class WithGapPenalty
     {
         private SimilarityMatrix similarityMatrix;
         private Func<int, int> penaltyFunc;
