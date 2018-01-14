@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SequencesAlignment.Algorithms;
+using System;
 using System.Linq;
 
 namespace SequencesAlignment
@@ -53,7 +54,7 @@ namespace SequencesAlignment
             similarityMatrix.CheckSequenceCorrectness(sequence1);
             similarityMatrix.CheckSequenceCorrectness(sequence2);
             
-            // Check whether user provioded the --nogappenalty option.
+            // Check whether user provided the --nogappenalty option.
             bool isOptionB = options.Any(x => x == "--nogappenalty");
 
             if(isOptionB)
@@ -64,6 +65,14 @@ namespace SequencesAlignment
                 Console.WriteLine(results.Item1);
                 Console.WriteLine(results.Item2);
                 Console.WriteLine("Evaluation: " + evaluation);
+            }
+            else
+            {
+                WithGapPenalty p = new WithGapPenalty(similarityMatrix);
+                var results = p.StartAlgorithm(sequence1, sequence2);
+                Console.WriteLine(results.Item2.Item1);
+                Console.WriteLine(results.Item2.Item2);
+                Console.WriteLine("Evaluation: " + results.Item1);
             }
 
         }
