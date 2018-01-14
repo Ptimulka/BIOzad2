@@ -9,9 +9,9 @@ namespace SequencesAlignment.Algorithms
     public class WithGapPenalty
     {
         private SimilarityMatrix similarityMatrix;
-        private Func<int, int> penaltyFunc;
+        private Func<int, double> penaltyFunc;
 
-        public WithGapPenalty(SimilarityMatrix similarityMatrix, Func<int, int> penaltyFunc )
+        public WithGapPenalty(SimilarityMatrix similarityMatrix, Func<int, double> penaltyFunc)
         {
             this.similarityMatrix = similarityMatrix;
             this.penaltyFunc = penaltyFunc;
@@ -23,7 +23,7 @@ namespace SequencesAlignment.Algorithms
         /// <param name="X">First sequence.</param>
         /// <param name="Y">Second sequence.</param>
         /// <returns>Two alignments.</returns>
-        public Tuple<double, Tuple<string, string>> StartAlgorithm(string X, string Y)
+        public Tuple<double, Tuple<string, string>> StartNoGapAlgorithm(string X, string Y)
         {
             if (X.Length == 0)
             {
@@ -42,9 +42,9 @@ namespace SequencesAlignment.Algorithms
             int tableLenX = X.Length + 1;
             int tableLenY = Y.Length + 1;
 
-            Cell[,] A = new Cell[tableLenX, tableLenY];
-            Cell[,] B = new Cell[tableLenX, tableLenY];
-            Cell[,] C = new Cell[tableLenX, tableLenY];
+            double[,] A = new double[tableLenX, tableLenY];
+            double[,] B = new double[tableLenX, tableLenY];
+            double[,] C = new double[tableLenX, tableLenY];
             Cell[,] S = new Cell[tableLenX, tableLenY];
 
             InitTables(A, B, C, S);
@@ -64,16 +64,16 @@ namespace SequencesAlignment.Algorithms
             public Tuple<int,int> Pointer { get; set; }
         }
 
-        private void InitTables(Cell[,] A, Cell[,] B, Cell[,] C, Cell[,] S)
+        private void InitTables(double[,] A, double[,] B, double[,] C, Cell[,] S)
         {
             for(int i = 0; i < A.GetLength(0); i++)
             {
                 for(int j = 0; j < A.GetLength(1); j++)
                 {
-                    A[i, j] = new Cell(Double.NegativeInfinity, null);
-                    B[i, j] = new Cell(Double.NegativeInfinity, null);
-                    C[i, j] = new Cell(Double.NegativeInfinity, null);
-                    S[i, j] = new Cell(Double.NegativeInfinity, null);
+                    A[i, j] = double.NegativeInfinity;
+                    B[i, j] = double.NegativeInfinity;
+                    C[i, j] = double.NegativeInfinity;
+                    S[i, j] = new Cell(double.NegativeInfinity, null);
                 }
             }
             
@@ -83,7 +83,7 @@ namespace SequencesAlignment.Algorithms
                 double penalty = Penalty(i);
                 S[i, 0].Value = -penalty;
                 S[i, 0].Pointer = new Tuple<int, int>(i - 1, 0);
-                B[i, 0].Value = -penalty;
+                B[i, 0] = -penalty;
             }
 
             for (int i = 1; i < A.GetLength(1); i++)
@@ -91,18 +91,18 @@ namespace SequencesAlignment.Algorithms
                 double penalty = Penalty(i);
                 S[0, i].Value = -penalty;
                 S[0, i].Pointer = new Tuple<int, int>(0, i - 1);
-                A[0, i].Value = -penalty;
+                A[0, i] = -penalty;
             }
                         
         }
 
-        private void FillTables(Cell[,] A, Cell[,] B, Cell[,] C, Cell[,] S, string X, string Y)
+        private void FillTables(double[,] A, double[,] B, double[,] C, Cell[,] S, string X, string Y)
         {
             for(int i = 1; i < A.GetLength(0); i++)
             {
                 for(int j = 1; j < A.GetLength(1); j++)
                 {
-                    C[i, j].Value = S[i - 1, j - 1].Value + similarityMatrix.GetSimilarity(X[i - 1], Y[j - 1]);
+                    C[i, j] = S[i - 1, j - 1].Value + similarityMatrix.GetSimilarity(X[i - 1], Y[j - 1]);
                     FillTableA(A, B, C, i, j);
                     FillTableB(A, B, C, i, j);
                     FillTableS(A, B, C, S, i, j);
@@ -110,45 +110,45 @@ namespace SequencesAlignment.Algorithms
             }
         }
 
-        private void FillTableA(Cell[,] A, Cell[,] B, Cell[,] C, int i, int j)
+        private void FillTableA(double[,] A, double[,] B, double[,] C, int i, int j)
         {
             double max = Double.NegativeInfinity;
 
             for(int k = 0; k < j; k++)
             {
-                double fromB = B[i, k].Value;
-                double fromC = C[i, k].Value;
+                double fromB = B[i, k];
+                double fromC = C[i, k];
                 double penalty = Penalty(j - k);
                 double res = Math.Max(fromB, fromC) - penalty;
                 if (res > max)
                     max = res;
             }
 
-            A[i, j].Value = max;
+            A[i, j] = max;
         }
 
-        private void FillTableB(Cell[,] A, Cell[,] B, Cell[,] C, int i, int j)
+        private void FillTableB(double[,] A, double[,] B, double[,] C, int i, int j)
         {
             double max = Double.NegativeInfinity;
 
             for (int k = 0; k < i; k++)
             {
-                double fromA = A[k, j].Value;
-                double fromC = C[k, j].Value;
+                double fromA = A[k, j];
+                double fromC = C[k, j];
                 double penalty = Penalty(i - k);
                 double res = Math.Max(fromA, fromC) - penalty;
                 if (res > max)
                     max = res;
             }
 
-            B[i, j].Value = max;
+            B[i, j] = max;
         }
 
-        private void FillTableS(Cell[,] A, Cell[,] B, Cell[,] C, Cell[,] S, int i, int j)
+        private void FillTableS(double[,] A, double[,] B, double[,] C, Cell[,] S, int i, int j)
         {
-            double fromA = A[i, j].Value;
-            double fromB = B[i, j].Value;
-            double fromC = C[i, j].Value;
+            double fromA = A[i, j];
+            double fromB = B[i, j];
+            double fromC = C[i, j];
 
             if(fromC >= fromA && fromC >= fromB)
             {

@@ -68,8 +68,8 @@ namespace SequencesAlignment
             }
             else
             {
-                WithGapPenalty p = new WithGapPenalty(similarityMatrix, x => x + 1);
-                var results = p.StartAlgorithm(sequence1, sequence2);
+                WithGapPenalty p = new WithGapPenalty(similarityMatrix, x => x + 2);
+                var results = p.StartNoGapAlgorithm(sequence1, sequence2);
                 Console.WriteLine(results.Item2.Item1);
                 Console.WriteLine(results.Item2.Item2);
                 Console.WriteLine("Evaluation: " + results.Item1);
